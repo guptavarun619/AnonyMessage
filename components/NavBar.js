@@ -9,22 +9,22 @@ function NavBar({ email, img, name }) {
     setShowDropDown(true);
   }
   return (
-    <div className="flex justify-between items-center py-4 sm:px-20 box-border top-0 right-0 left-0">
+    <div className="flex fixed justify-between items-center py-4 px-10 sm:px-20 box-border top-0 right-0 left-0">
       <h1 className=" font-extrabold text-3xl">AM.</h1>
       <div
         ref={ref}
-        className="flex justify-center gap-2 shadow-xl p-3 rounded-full relative cursor-pointer"
+        className="flex justify-center gap-2 shadow-xl p-3 rounded-full relative cursor-pointer bg-[wheat]"
         onClick={() => handleDropDown()}
       >
         <img src={img} alt="img" className=" w-10 h-10 rounded-full" />
-        <div className="flex flex-col justify-center">
+        <div className="sm:flex flex-col justify-center hidden">
           <span className="text-sm font-semibold">{name}</span>
           <span className=" text-xs font-semibold">{email}</span>
         </div>
         {showDropDown && (
           <div className=" border-2 p-3 text-center rounded-lg bg-white absolute mt-14 ">
             <button
-              className="text-[#F89E1A] font-bold w-full"
+              className="text-[#F89E1A] font-bold w-full whitespace-nowrap"
               onClick={() => signOut()}
             >
               Sign out

@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useEffect } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import GITHUB_ICON from "assets/icons/github_icon.svg";
 import { useRouter } from "next/navigation";
 export default function Home() {

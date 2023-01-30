@@ -2,6 +2,7 @@ export default function Head() {
   return (
     <>
       <title>AnonyMessage</title>
+
       <meta
         content="width=device-width, initial-scale=1 , user-scalable=no"
         name="viewport"
