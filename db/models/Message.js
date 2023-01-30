@@ -2,13 +2,9 @@ const { Schema, model, models } = require("mongoose");
 
 const messageSchema = new Schema(
   {
-    from: String,
-    to: String,
-    content: String,
-    hidden: {
-      type: Boolean,
-      default: true,
-    },
+    from: { ip: String, loc: String },
+    to: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    content: { type: String, required: true },
   },
   { timestamps: true }
 );

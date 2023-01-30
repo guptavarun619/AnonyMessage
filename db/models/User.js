@@ -1,9 +1,12 @@
 const { Schema, model, models } = require("mongoose");
 
 const userSchema = new Schema({
-  username: String,
-  password: String,
-  messageRecieved: [],
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  messageRecieved: [{ type: Schema.Types.ObjectId, ref: "Message" }],
 });
 
 const User = models.User || model("User", userSchema);
