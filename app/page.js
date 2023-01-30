@@ -3,10 +3,17 @@ import Image from "next/image";
 import { useEffect } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import GITHUB_ICON from "assets/icons/github_icon.svg";
+import { useRouter } from "next/navigation";
 export default function Home() {
   const { data: session, status } = useSession();
+  const router = useRouter();
   useEffect(() => {
-    console.log(session, status);
+    // console.log(session, status);
+    if (session !== null && status === "authenticated") {
+      router.push("/inbox");
+    } else {
+      router.push("/");
+    }
   }, [status]);
   return (
     <div className="flex flex-col">
