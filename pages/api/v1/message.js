@@ -3,7 +3,7 @@ import { sendMessage } from "@/db/repository/Message";
 export default async function handler(req, res) {
   if (req.method == "POST") {
     try {
-      const from = req.body.from;
+      const from = req.body.from; // get hint from user agent
       const to = req.body.to;
       const content = req.body.content;
 
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         to: to,
         content: content,
       };
-      console.log(data);
+      // console.log(data);
       const messageSent = await sendMessage(data);
 
       res.status(201).json({
