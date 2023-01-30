@@ -1,4 +1,5 @@
 import { sendMessage } from "@/db/repository/Message";
+import { findUser } from "@/db/repository/User";
 
 export default async function handler(req, res) {
   if (req.method == "POST") {
@@ -16,12 +17,13 @@ export default async function handler(req, res) {
         };
       }
 
+      // now we'll find the 'to' user in our db
+      const user = await findUser(to);
       const data = {
         from: from,
-        to: to,
+        to: user.userId,
         content: content,
       };
-      // console.log(data);
       const messageSent = await sendMessage(data);
 
       res.status(201).json({
