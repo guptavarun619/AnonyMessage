@@ -14,12 +14,12 @@ function Inbox() {
     { hint: "anish", content: "hey buddy this is just a tesst message" },
   ];
   return (
-    <div className="flex justify-center w-full ">
-      <div className=" sm:w-1/3 ">
+    <div className="flex justify-center w-full sm:mt-10 mt-20 ">
+      <div className=" lg:w-1/3 md:w-1/2">
         <h1 className=" text-3xl font-bold text-center ">
           Inbox <span className=" shadow-xl rounded-full">😋</span>
         </h1>
-        <div className=" mt-14  rounded-lg p-4 flex flex-col gap-2  ">
+        <div className=" mt-5  rounded-lg p-4 flex flex-col gap-2  ">
           {messages.map((item) => (
             <Messages hint={item.hint} content={item.content} />
           ))}

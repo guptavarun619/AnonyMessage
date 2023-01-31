@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import NavBar from "./NavBar";
 function SecurePageHOC(Component) {
@@ -9,7 +9,7 @@ function SecurePageHOC(Component) {
     useEffect(() => {
       // console.log(session, status);
       if (status === "unauthenticated") {
-        signIn();
+        router.push("/");
       }
     }, [status]);
     return (
