@@ -19,11 +19,14 @@ export default async function handler(req, res) {
 
       // now we'll find the 'to' user in our db
       const user = await findUser(to);
+
+      console.log("find user :", user);
       const data = {
         from: from,
         to: user.userId,
         content: content,
       };
+
       const messageSent = await sendMessage(data);
 
       res.status(201).json({
