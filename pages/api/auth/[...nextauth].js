@@ -8,5 +8,18 @@ export const authOptions = {
       clientSecret: GITHUB_SECRET,
     }),
   ],
+
+  callbacks: {
+    session: async ({ session, token }) => {
+      if (session?.user) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
+  },
+  session: {
+    strategy: "jwt",
+  },
 };
+
 export default NextAuth(authOptions);

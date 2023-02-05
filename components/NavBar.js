@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { signOut } from "next-auth/react";
 import useClickOutsideDetector from "@/hooks/useClickOutsideDetector";
-function NavBar({ email, img, name }) {
+function NavBar({ email, img, GHUsername }) {
   const [showDropDown, setShowDropDown] = useState(false);
   const ref = useRef();
   useClickOutsideDetector(ref, setShowDropDown);
@@ -18,7 +18,7 @@ function NavBar({ email, img, name }) {
       >
         <img src={img} alt="img" className=" w-10 h-10 rounded-full" />
         <div className="sm:flex flex-col justify-center hidden">
-          <span className="text-sm font-semibold">{name}</span>
+          <span className="text-sm font-semibold">{GHUsername}</span>
           <span className=" text-xs font-semibold">{email}</span>
         </div>
         {showDropDown && (

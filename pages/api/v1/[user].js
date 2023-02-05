@@ -1,11 +1,12 @@
 const { addUser, findUser } = require("@/db/repository/User");
 
-addUser;
+// addUser;
 
 export default async function handler(req, res) {
   if (req.method == "POST") {
     try {
-      const username = req.body.username;
+      const { username } = JSON.parse(req.body);
+      console.log("username", username);
       if (username == undefined) {
         console.log("Some field is missing");
         throw {
@@ -42,9 +43,11 @@ export default async function handler(req, res) {
     }
   } else if (req.method == "GET") {
     // check if the user exists or not
+
     try {
-      const username = req.body.username;
-      if (username == undefined) {
+      const { user } = req.query;
+      console.log("params :", req.query);
+      if (user == undefined) {
         console.log("Some field is missing");
         throw {
           error: "INVALID INPUT",
@@ -52,7 +55,7 @@ export default async function handler(req, res) {
         };
       }
 
-      const userFound = await findUser(username);
+      const userFound = await findUser(user);
       console.log(userFound);
 
       res.status(200).json({

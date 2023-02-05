@@ -1,8 +1,13 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Messages from "@/components/Messages";
 import SecurePageHOC from "@/components/SecurePageHOC";
+import { BASE_URL, FETCH_MESSAGE } from "@/constants";
+import { useSession } from "next-auth/react";
 function Inbox() {
+  const [message, setMessage] = useState();
+  const { data: session, status } = useSession();
+
   const messages = [
     { hint: "anish", content: "hey buddy this is just a tesst message" },
     { hint: "varun", content: "hey buddy this is just a tesst message" },
@@ -13,6 +18,13 @@ function Inbox() {
     { hint: "anish", content: "hey buddy this is just a tesst message" },
     { hint: "anish", content: "hey buddy this is just a tesst message" },
   ];
+  // useEffect(() => {
+  //   fetch(`${FETCH_MESSAGE}/${GHUsername}`, {
+  //     method: "GET",
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => console.log("fetch message :", data));
+  // }, []);
   return (
     <div className="flex justify-center w-full sm:mt-10 mt-20 ">
       <div className=" lg:w-1/3 md:w-1/2">
