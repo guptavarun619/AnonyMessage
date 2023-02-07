@@ -1,17 +1,38 @@
 "use client";
+import { useEffect } from "react";
 import Image from "next/image";
 import { useSession, signIn } from "next-auth/react";
 import GITHUB_ICON from "assets/icons/github_icon.svg";
 import { useRouter } from "next/navigation";
-export default function Home() {
+import { ADD_USER, GITHUB_USERINFO_API } from "../constants";
+import SecurePageHOC from "@/components/SecurePageHOC";
+function Home({ setGHUsername }) {
   const { data: session, status } = useSession();
   const router = useRouter();
-  // useEffect(() => {
-  //   // console.log(session, status);
-  //   if (session !== null && status === "authenticated") {
-  //     router.push("/inbox");
-  //   }
-  // }, [status]);
+
+  useEffect(() => {
+    async function handleRegister() {
+      const GHUsername = await fetch(
+        `${GITHUB_USERINFO_API}${session?.user?.id}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setGHUsername(data?.login);
+          return data?.login;
+        });
+      const userCreated = await fetch(ADD_USER, {
+        method: "POST",
+        body: JSON.stringify({ username: GHUsername }),
+      })
+        .then((res) => res.json())
+        .then((data) => data);
+      console.log("userCreated :", userCreated);
+    }
+    if (status === "authenticated") {
+      handleRegister();
+    }
+  }, [status]);
+
   return (
     <div className="flex flex-col">
       <h1 className="text-5xl font-extrabold  text-center text-black">
@@ -41,3 +62,4 @@ export default function Home() {
     </div>
   );
 }
+export default SecurePageHOC(Home);

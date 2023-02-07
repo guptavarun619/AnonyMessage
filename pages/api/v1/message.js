@@ -4,9 +4,7 @@ import { findUser } from "@/db/repository/User";
 export default async function handler(req, res) {
   if (req.method == "POST") {
     try {
-      const from = req.body.from; // get hint from user agent
-      const to = req.body.to;
-      const content = req.body.content;
+      const { from, to, content } = JSON.parse(req.body); // get hint from user agent
 
       if (from == undefined || to == undefined || content == undefined) {
         console.log("Some field is missing");

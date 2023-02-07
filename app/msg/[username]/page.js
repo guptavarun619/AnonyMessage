@@ -1,15 +1,28 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-
+import { SEND_MESSAGE } from "@/constants";
 function SendMessage(id) {
   const { data: session } = useSession();
   const [message, setMessage] = useState();
 
   // console.log(id.params.username);
-  useEffect(() => {
-    //check user exists or not
-  }, []);
+
+  async function fetchMessage() {
+    await fetch(`${SEND_MESSAGE}`, {
+      method: "POST",
+      body: JSON.stringify({
+        to: id.params.username,
+        from: { ip: 123, loc: "localhost" },
+        content: message,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setMessage(" ");
+      });
+  }
+
   // write a function to post message {from:device info, to:username,content:message}
   return (
     <div className="flex flex-col gap-10 items-center justify-center">
@@ -31,7 +44,10 @@ function SendMessage(id) {
           rows={6}
         ></textarea>
       </div>
-      <button className=" font-bold px-4 py-2 rounded-lg bg-[wheat]">
+      <button
+        onClick={() => fetchMessage()}
+        className=" font-bold px-4 py-2 rounded-lg bg-[wheat]"
+      >
         Send
       </button>
     </div>
