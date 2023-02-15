@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { GITHUB_USERINFO_API } from "@/constants";
 import NavBar from "./NavBar";
 
 function SecurePageHOC(Component) {
   function SecurePage() {
-    const [GHUsername, setGHUsername] = useState();
     const { data: session, status } = useSession();
-    const router = useRouter();
 
+    const router = useRouter();
     useEffect(() => {
       if (status === "unauthenticated") {
         router.push("/");
@@ -17,14 +17,10 @@ function SecurePageHOC(Component) {
     return (
       <div className="flex flex-col ">
         {session && (
-          <NavBar
-            img={session?.user.image}
-            email={session?.user.email}
-            GHUsername={GHUsername}
-          />
+          <NavBar img={session?.user.image} email={session?.user.email} />
         )}
 
-        <Component GHUsername={GHUsername} setGHUsername={setGHUsername} />
+        <Component />
       </div>
     );
   }
