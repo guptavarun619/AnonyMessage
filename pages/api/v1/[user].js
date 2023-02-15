@@ -1,4 +1,4 @@
-const { addUser, findUser } = require("@/db/repository/User");
+import { addUser, findUser } from "@/db/repository/User";
 
 // addUser;
 

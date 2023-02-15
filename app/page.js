@@ -1,25 +1,27 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useContext, useState } from "react";
 import Image from "next/image";
 import { useSession, signIn } from "next-auth/react";
 import GITHUB_ICON from "assets/icons/github_icon.svg";
 import { useRouter } from "next/navigation";
 import { ADD_USER, GITHUB_USERINFO_API } from "../constants";
-import SecurePageHOC from "@/components/SecurePageHOC";
-function Home({ setGHUsername }) {
+import { Data } from "@/context/Context";
+function Home() {
   const { data: session, status } = useSession();
-  const router = useRouter();
 
+  const { GHUsername, setGHUsername } = useContext(Data);
+  const router = useRouter();
+  console.log(GHUsername);
   useEffect(() => {
-    async function handleRegister() {
-      const GHUsername = await fetch(
-        `${GITHUB_USERINFO_API}${session?.user?.id}`
-      )
+    if (GHUsername === undefined) {
+      fetch(`${GITHUB_USERINFO_API}${session?.user?.id}`)
         .then((res) => res.json())
         .then((data) => {
           setGHUsername(data?.login);
-          return data?.login;
         });
+    }
+
+    async function handleRegister() {
       const userCreated = await fetch(ADD_USER, {
         method: "POST",
         body: JSON.stringify({ username: GHUsername }),
@@ -28,10 +30,10 @@ function Home({ setGHUsername }) {
         .then((data) => data);
       console.log("userCreated :", userCreated);
     }
-    if (status === "authenticated") {
+    if (status === "authenticated" && GHUsername) {
       handleRegister();
     }
-  }, [status]);
+  }, [status, GHUsername]);
 
   return (
     <div className="flex flex-col">
@@ -62,4 +64,4 @@ function Home({ setGHUsername }) {
     </div>
   );
 }
-export default SecurePageHOC(Home);
+export default Home;

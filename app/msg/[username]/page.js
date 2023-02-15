@@ -1,55 +1,96 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import React, { use, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { SEND_MESSAGE } from "@/constants";
+import UAParser from "ua-parser-js";
 function SendMessage(id) {
-  const { data: session } = useSession();
   const [message, setMessage] = useState();
+  const [browserDetails, setBrowserDetails] = useState({});
+  const [error, setError] = useState();
+  const navigate = useRouter();
+  useEffect(() => {
+    const parser = new UAParser();
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      }
+    }
 
-  // console.log(id.params.username);
+    function showPosition(position) {
+      setBrowserDetails({
+        ip: "198123",
+        loc: {
+          lat: position.coords.latitude,
+          long: position.coords.longitude,
+        },
+        browser: parser.getResult().browser.name,
+        os: parser.getResult().os.name,
+      });
+    }
 
-  async function fetchMessage() {
+    getLocation();
+  }, []);
+
+  async function sendhMessage() {
     await fetch(`${SEND_MESSAGE}`, {
       method: "POST",
       body: JSON.stringify({
         to: id.params.username,
-        from: { ip: 123, loc: "localhost" },
+        from: browserDetails,
         content: message,
       }),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw Error("Something went wrong");
+        }
+        return res.json();
+      })
       .then((data) => {
         setMessage(" ");
+      })
+      .catch((err) => {
+        setError(err.message);
       });
   }
 
-  // write a function to post message {from:device info, to:username,content:message}
   return (
     <div className="flex flex-col gap-10 items-center justify-center">
-      <h1 className="text-3xl font-extrabold absolute left-0 top-0 py-4 px-14">
-        AM.
-      </h1>
-      <h1 className=" flex text-3xl font-bold ">
-        Send message 👉🏾{" "}
-        {/* <span>
-          <img className="h-10 w-10" src={session?.user.image} alt="image" />{" "}
-        </span> */}
-      </h1>
-      <div className=" sm:w-1/2 w-3/4">
-        <textarea
-          onChange={(e) => setMessage(e.target.value)}
-          className="w-full rounded-xl p-4 outline-none text-lg font-semibold capitalize"
-          placeholder="Send message anonymously..."
-          cols={20}
-          rows={6}
-        ></textarea>
-      </div>
-      <button
-        onClick={() => fetchMessage()}
-        className=" font-bold px-4 py-2 rounded-lg bg-[wheat]"
-      >
-        Send
-      </button>
+      {error ? (
+        <span className=" text-5xl font-semibold bg-white p-4 rounded-lg ">
+          {error}
+          😥
+        </span>
+      ) : (
+        <>
+          <h1
+            onClick={() => navigate.push("/")}
+            className="text-3xl font-extrabold absolute left-0 top-0 py-4 px-14"
+          >
+            AM.
+          </h1>
+          <h1 className=" flex text-3xl font-bold ">Send message 👉🏾 </h1>
+          <div className=" sm:w-1/2 w-3/4">
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="w-full rounded-xl p-4 outline-none text-lg font-semibold capitalize"
+              placeholder="Send message anonymously..."
+              cols={20}
+              rows={6}
+            ></textarea>
+          </div>
+          <button
+            disabled={!message}
+            onClick={sendhMessage}
+            className={`${
+              !message && " text-neutral-500"
+            } font-bold px-4 py-2 rounded-lg bg-[wheat]`}
+          >
+            Send
+          </button>
+        </>
+      )}
     </div>
   );
 }
